@@ -4,7 +4,7 @@ import argparse
 import socket
 import json
    
-def server(addr, port=7777):   
+def server(addr='localhost', port=7777):   
     # Подключение к сокету
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.bind((addr, port))
@@ -25,13 +25,14 @@ def server(addr, port=7777):
     
     
 if __name__ == '__main__':
-    print(4)
+    print('...connect...')
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('-addr', action='store', help='IP адрес')
+    parser.add_argument('-addr', action='store', nargs='?', const=1, \
+                        type=str, help='IP адрес')
     parser.add_argument('-port', action='store', nargs='?', const=1, \
                         type=int, help='Номер порта')
     args = parser.parse_args()
-    server(args.addr, args.port if args.port else 7777)
+    server(args.addr if args.addr else '', args.port if args.port else 7777)
     
     
 

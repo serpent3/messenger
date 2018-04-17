@@ -3,11 +3,12 @@
 import socket
 import json
 import argparse
+import lib
 
-def client(addr, port=7777):
+def client(addr='localhost', port=7777):
     # Подключение к сокету
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect(('', 7777))
+    sock.connect((addr, port))
     # Сообщение серверу
     message = {
         'action': 'presense',
@@ -26,11 +27,15 @@ def client(addr, port=7777):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('-a', action='store', help='IP адрес')
+    parser.add_argument('-a', action='store', nargs='?', const=1, \
+                        type=str, help='IP адрес')
     parser.add_argument('-p', action='store', nargs='?', const=1, \
                         type=int, help='Номер порта')
     args = parser.parse_args()
-    client(args.a, args.p if args.p else 7777)
+    #print(lib.args_check(args.a, '1'))
+    print(lib.addr_check(args.a))
+    client(args.a if lib.addr_check(args.a) else '', \
+           args.p if lib.port_check(args.p) else 7777)
 
 
 
