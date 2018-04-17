@@ -3,6 +3,7 @@
 import argparse
 import socket
 import json
+import lib
    
 def server(addr='localhost', port=7777):   
     # Подключение к сокету
@@ -14,9 +15,19 @@ def server(addr='localhost', port=7777):
         client, addr = sock.accept()
         print('Получен запрос на соединение от ' + str(addr))
         # Принимает сообщение от клиента
-        from_client = client.recv(1024)
-        json_message = json.loads(from_client.decode('utf-8'))
-        print('Клиент отправил: ' + json_message['action'])
+#        from_client = client.recv(1024)
+#        json_message = json.loads(from_client.decode('utf-8'))
+        message = lib.get_message(client)
+        
+        if 'action' not in dir(message) \
+        or 'user' not in dir(message):
+            client.close()
+            
+        if message.action == 'presense':
+            lib.presense(message, client)
+            
+        
+        print('Клиент отправил: ' + message.action)
         # Отпрака сообщения клиенту
         to_client = ('Принято: ' + json_message['action']).encode('utf-8')
         client.send(to_client)
