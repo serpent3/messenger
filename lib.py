@@ -1,11 +1,12 @@
 # Проверка аргументов адреса и порта
 import re
 import json
+import time
 
 def addr_check(addr):
-    if re.findall(r'^\d*\.\d*\.\d*\.\d*$', addr) \
-    or re.findall(r'^localhost$', addr) \
-    or re.findall(r'', addr):
+    if re.findall(r'^\d*\.\d*\.\d*\.\d*$', str(addr)) \
+    or re.findall(r'^localhost$', str(addr)) \
+    or re.findall(r'', str(addr)):
         return addr
     else:
         return False
@@ -20,17 +21,20 @@ def port_check(port):
 # Делатель сообщений
 class Message():
     def __init__(self, name, action='presense', mess=''):
-        self.message = {
-        'action': action,
-        'user': name
-        }
         self.action = action
         self.user = name
+        
     def form(self):
+        self.message = {
+        'action': self.action,
+        'time': time.time(),
+        'user': self.user  
+        }            
+#        self.message = json.dumps(self.message)
+#        self.message = self.message
         return self.message
      
-def send_message(sock):
-    message = Message('Max')
+def send_message(sock, message):
     json_message = json.dumps(message.form())
     byte_message = json_message.encode('utf-8')
     # Отправка сообщения
@@ -43,10 +47,7 @@ def get_message(client):
     return message
 
 def presense(message, client):
-    if message.action == 'presense':
-        to_client = ('Вызов presense(message)'.encode('utf-8'))
-        
-    client.send(to_client)
+    client.send(('200' + str(message.form())).encode('utf-8'))
      
         
 # Проверка сообщения сервером

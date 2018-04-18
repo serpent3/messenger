@@ -5,17 +5,12 @@ import json
 import argparse
 import lib
 
-def client(addr='localhost', port=7777):
+def client(message, addr='localhost', port=7777):
     # Подключение к сокету
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((addr, port))
     # Сообщение серверу
-#    message = lib.Message('Max')
-#    json_message = json.dumps(message.form())
-#    to_server = json_message.encode('utf-8')
-#    # Отправка сообщения
-#    sock.send(to_server)
-    lib.send_message(sock)
+    lib.send_message(sock, lib.Message(message))
     # Приём сообщения от сервера
     from_server = sock.recv(1024)
     print('Сервер отправил: ' + from_server.decode('utf-8'))
@@ -29,10 +24,12 @@ if __name__ == '__main__':
                         type=str, help='IP адрес')
     parser.add_argument('-p', action='store', nargs='?', const=1, \
                         type=int, help='Номер порта')
+    parser.add_argument('-m', action='store', nargs='?', const=1, \
+                        type=str, help='Номер порта')
     args = parser.parse_args()
     #print(lib.args_check(args.a, '1'))
     print(lib.addr_check(args.a))
-    client(args.a if args.a else '', args.p if args.p else 7777)
+    client(args.m, args.a if args.a else '', args.p if args.p else 7777)
 #    client(args.a if lib.addr_check(args.a) else '', \
 #           args.p if lib.port_check(args.p) else 7777)
 

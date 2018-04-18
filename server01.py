@@ -15,22 +15,21 @@ def server(addr='localhost', port=7777):
         client, addr = sock.accept()
         print('Получен запрос на соединение от ' + str(addr))
         # Принимает сообщение от клиента
-#        from_client = client.recv(1024)
-#        json_message = json.loads(from_client.decode('utf-8'))
         message = lib.get_message(client)
         
+        # Проверка формата сообщения (наверно, перенести в гет мессаж)
         if 'action' not in dir(message) \
         or 'user' not in dir(message):
+            client.send('400'.encode('utf-8'))
             client.close()
-            
+        
+        # Функция для действий при action == 'presense'
         if message.action == 'presense':
             lib.presense(message, client)
-            
         
-        print('Клиент отправил: ' + message.action)
         # Отпрака сообщения клиенту
-        to_client = ('Принято: ' + json_message['action']).encode('utf-8')
-        client.send(to_client)
+        lib.send_message(client, lib.Message('V'))
+        print('Клиент отправил: ' + message.action)
         # Закрытие сокета
         client.close()
     
