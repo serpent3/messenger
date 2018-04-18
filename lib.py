@@ -2,22 +2,7 @@
 import re
 import json
 import time
-
-def addr_check(addr):
-    if re.findall(r'^\d*\.\d*\.\d*\.\d*$', str(addr)) \
-    or re.findall(r'^localhost$', str(addr)) \
-    or re.findall(r'', str(addr)):
-        return addr
-    else:
-        return False
-    
-def port_check(port):
-    if type(port) == int \
-    and port > 1024 and port < 49151:
-        return port
-    else:
-        return False
-    
+  
 # Делатель сообщений
 class Message():
     def __init__(self, name, action='presense', mess=''):
@@ -46,8 +31,25 @@ def get_message(client):
     message = Message(name=json_message['user'], action=json_message['action'])
     return message
 
+
 def presense(message, client):
     client.send(('200' + str(message.form())).encode('utf-8'))
+
+
+
+# Стандартные ответы
+valid_query = json.dumps(
+    {
+        "response": 200,
+        "time": time.time()
+    })
+
+invalid_query = json.dumps(
+    {
+        "response": 400,
+        "time": time.time()
+    })
+
      
         
 # Проверка сообщения сервером

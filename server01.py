@@ -20,7 +20,8 @@ def server(addr='localhost', port=7777):
         # Проверка формата сообщения (наверно, перенести в гет мессаж)
         if 'action' not in dir(message) \
         or 'user' not in dir(message):
-            client.send('400'.encode('utf-8'))
+            
+            client.send(lib.invalid_query.encode('utf-8'))
             client.close()
         
         # Функция для действий при action == 'presense'

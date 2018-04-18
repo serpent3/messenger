@@ -12,8 +12,10 @@ def client(message, addr='localhost', port=7777):
     # Сообщение серверу
     lib.send_message(sock, lib.Message(message))
     # Приём сообщения от сервера
-    from_server = sock.recv(1024)
-    print('Сервер отправил: ' + from_server.decode('utf-8'))
+    message = lib.get_message(sock)
+    print('Сервер отправил: ' + str(message.form()))
+#    from_server = sock.recv(1024)
+#    print('Сервер отправил: ' + from_server.decode('utf-8'))
     # Закрытие сокета
     sock.close()
 
@@ -27,11 +29,8 @@ if __name__ == '__main__':
     parser.add_argument('-m', action='store', nargs='?', const=1, \
                         type=str, help='Номер порта')
     args = parser.parse_args()
-    #print(lib.args_check(args.a, '1'))
-    print(lib.addr_check(args.a))
+
     client(args.m, args.a if args.a else '', args.p if args.p else 7777)
-#    client(args.a if lib.addr_check(args.a) else '', \
-#           args.p if lib.port_check(args.p) else 7777)
 
 
 
