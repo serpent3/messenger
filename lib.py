@@ -1,40 +1,34 @@
-# Проверка аргументов адреса и порта
-import re
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import json
 import time
-  
-# Делатель сообщений
-class Message():
-    def __init__(self, name, action='presense', mess=''):
-        self.action = action
-        self.user = name
-        
-    def form(self):
-        self.message = {
-        'action': self.action,
-        'time': time.time(),
-        'user': self.user  
-        }            
-#        self.message = json.dumps(self.message)
-#        self.message = self.message
-        return self.message
+import server01
+
      
+        
 def send_message(sock, message):
     json_message = json.dumps(message.form())
     byte_message = json_message.encode('utf-8')
     # Отправка сообщения
     sock.send(byte_message)
     
+    
 def get_message(client):
     from_client = client.recv(1024)
     json_message = json.loads(from_client.decode('utf-8'))
-    message = Message(name=json_message['user'], action=json_message['action'])
-    return message
+    #message = Message(name=json_message['user'], action=json_message['action'])
+    return json_message
 
 
+# Функция для действий при action == 'presense'
 def presense(message, client):
-    client.send(('200' + str(message.form())).encode('utf-8'))
-
+    client.send(valid_query.encode('utf-8') )
+    
+messages = ['']
+def msg(message, client):
+    m = '\n{} написал(а): {}'.format(message['user']['account_name'], \
+         message['message'])
+    messages.append(m)
 
 
 # Стандартные ответы
@@ -50,12 +44,19 @@ invalid_query = json.dumps(
         "time": time.time()
     })
 
-     
-        
-# Проверка сообщения сервером
+probe_query = json.dumps(
+    {
+        "action": "probe",
+        "time": time.time()
+    })
 
 
-# Провека ответа сервера клиентом
 
-#
-#
+
+    
+    
+    
+    
+    
+    
+    
